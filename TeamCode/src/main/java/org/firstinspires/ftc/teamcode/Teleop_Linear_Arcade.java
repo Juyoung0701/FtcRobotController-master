@@ -107,15 +107,15 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
 
             }
 
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+//            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
 
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", forward, backward);
             telemetry.update();
         }
     }
