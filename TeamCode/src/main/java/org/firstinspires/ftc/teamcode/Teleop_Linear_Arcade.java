@@ -108,11 +108,11 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
                 rightFrontDrive.setPower(forward * -gamepad1.right_stick_y);
 
             }
-            else if (gamepad1.right_stick_y == 0){
-                leftBackDrive.setPower(forward * -gamepad1.right_stick_x);
-                leftFrontDrive.setPower(backward * -gamepad1.right_stick_x);
-                rightBackDrive.setPower(forward * -gamepad1.right_stick_x);
-                rightFrontDrive.setPower(backward * -gamepad1.right_stick_x);
+            else if (-gamepad1.right_stick_y == 0){
+                leftBackDrive.setPower(forward * gamepad1.right_stick_x);
+                leftFrontDrive.setPower(backward * gamepad1.right_stick_x);
+                rightBackDrive.setPower(forward * gamepad1.right_stick_x);
+                rightFrontDrive.setPower(backward * gamepad1.right_stick_x);
 
             }
             else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)>0){
