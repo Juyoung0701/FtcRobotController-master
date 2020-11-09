@@ -93,22 +93,55 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double backward = -1;
             double forward = 1;
+            double turningFactor = 0.75;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
 
             if (gamepad1.right_stick_x == 0){
-                leftBackDrive
+                leftBackDrive.setPower(forward * -gamepad1.right_stick_y);
+                leftFrontDrive.setPower(forward * -gamepad1.right_stick_y);
+                rightBackDrive.setPower(forward * -gamepad1.right_stick_y);
+                rightFrontDrive.setPower(forward * -gamepad1.right_stick_y);
 
             }
+            else if (gamepad1.right_stick_y == 0){
+                leftBackDrive.setPower(forward * -gamepad1.right_stick_x);
+                leftFrontDrive.setPower(backward * -gamepad1.right_stick_x);
+                rightBackDrive.setPower(forward * -gamepad1.right_stick_x);
+                rightFrontDrive.setPower(backward * -gamepad1.right_stick_x);
 
-//            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-//            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            }
+            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)>0){
+                if(gamepad1.right_stick_x > 0){
+                    leftFrontDrive.setPower(forward);
+                    rightBackDrive.setPower(forward);
+                }
+                else{
+                    leftFrontDrive.setPower(-forward);
+                    rightBackDrive.setPower(-forward);
+                }
+                leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)<0){
+                if(gamepad1.right_stick_x < 0){
+                    rightFrontDrive.setPower(forward);
+                    leftBackDrive.setPower((forward));
+                }
+                else{
+                    rightFrontDrive.setPower(-forward);
+                    leftBackDrive.setPower(-forward);
+                }
+                leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
+
+
+
 
 
 
