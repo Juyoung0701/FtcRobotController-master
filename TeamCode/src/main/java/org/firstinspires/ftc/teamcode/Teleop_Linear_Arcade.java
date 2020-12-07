@@ -139,7 +139,18 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
                 leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-
+            else if(gamepad1.right_trigger>0){
+                leftFrontDrive.setPower(forward*turningFactor);
+                leftBackDrive.setPower(forward*turningFactor);
+                rightFrontDrive.setPower(backward*turningFactor);
+                rightBackDrive.setPower(backward*turningFactor);
+            }
+            else if(gamepad1.left_trigger>0){
+                leftFrontDrive.setPower(backward*turningFactor);
+                leftBackDrive.setPower(backward*turningFactor);
+                rightFrontDrive.setPower(forward*turningFactor);
+                rightBackDrive.setPower(forward*turningFactor);
+            }
 
 
 
