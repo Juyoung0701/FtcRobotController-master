@@ -63,6 +63,12 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
 
+    private int thisTime = 0;
+    private int lastTime = 0;
+    private double maxSpeed = 1;
+    private double slowSpeed = 0.5;
+
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -151,6 +157,38 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
                 rightFrontDrive.setPower(forward*turningFactor);
                 rightBackDrive.setPower(forward*turningFactor);
             }
+
+
+//            Declare 1=being pressed, 0=not being pressed
+            if(gamepad1.a){
+                thisTime = 1;
+            }
+            else{
+                thisTime = 0;
+            }
+//            check for the button is pressed...
+            if(thisTime != lastTime){
+//                check that change is to pushed
+                if(thisTime == 1) {
+                    if (forward == maxSpeed){
+                        forward = slowSpeed;
+                    } else {
+                        forward = maxSpeed;
+                    }
+                    if (backward == -maxSpeed){
+                        backward = -slowSpeed;
+                    } else {
+                        backward = -maxSpeed;
+                    }
+                    lastTime = 1;
+                }
+            }
+            lastTime = thisTime;
+
+            telemetry.addData("Motor Speed: ", forward);
+
+
+
 
 
 
