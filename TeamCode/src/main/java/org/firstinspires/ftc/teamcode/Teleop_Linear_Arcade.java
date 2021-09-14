@@ -57,17 +57,24 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
+    private DcMotor leftFrontDrive;
+    private DcMotor rightFrontDrive;
+    private DcMotor leftBackDrive;
+    private DcMotor rightBackDrive;
 
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
-
-    private int thisTime = 0;
-    private int lastTime = 0;
+    private boolean thisTime = false;
+    private boolean lastTime = false;
+    private double backward = -1;
+    private double forward = 1;
+    private double turningFactor = 0.75;
     private double maxSpeed = 1;
     private double slowSpeed = 0.5;
 
+    // Setup a variable for each drive wheel to save power level for telemetry
+    // Choose to drive using either Tank Mode, or POV Mode
+    // Comment out the method that's not used.  The default below is POV.
+    // POV Mode uses left stick to go forward, and right stick to turn.
+    // - This uses basic math to combine motions and is easier to drive straight.
 
     @Override
     public void runOpMode() {
@@ -96,16 +103,7 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double backward = -1;
-            double forward = 1;
-            double turningFactor = 0.75;
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
 
             if (gamepad1.right_stick_x == 0){
                 leftBackDrive.setPower(forward * -gamepad1.right_stick_y);
@@ -121,30 +119,43 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
                 rightFrontDrive.setPower(backward * gamepad1.right_stick_x);
 
             }
-            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)>0){
-                if(gamepad1.right_stick_x > 0){
-                    leftFrontDrive.setPower(forward);
-                    rightBackDrive.setPower(forward);
-                }
-                else{
-                    leftFrontDrive.setPower(-forward);
-                    rightBackDrive.setPower(-forward);
-                }
+            else if (gamepad1.right_stick_x/-gamepad1.right_stick_y==1){
+                leftFrontDrive.setPower(forward*gamepad1.right_stick_x);
+                rightBackDrive.setPower(forward*gamepad1.right_stick_x);
                 leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)<0){
-                if(gamepad1.right_stick_x < 0){
-                    rightFrontDrive.setPower(forward);
-                    leftBackDrive.setPower((forward));
-                }
-                else{
-                    rightFrontDrive.setPower(-forward);
-                    leftBackDrive.setPower(-forward);
-                }
+            else if (gamepad1.right_stick_x/-gamepad1.right_stick_y==-1){
+                leftBackDrive.setPower(forward*gamepad1.right_stick_x);
+                rightFrontDrive.setPower(forward*gamepad1.right_stick_x);
                 leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
+
+//            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)>0){
+//                if(gamepad1.right_stick_x > 0){
+//                    leftFrontDrive.setPower(forward);
+//                    rightBackDrive.setPower(forward);
+//                }
+//                else{
+//                    leftFrontDrive.setPower(-forward);
+//                    rightBackDrive.setPower(-forward);
+//                }
+//                leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            }
+//            else if((gamepad1.right_stick_x*-gamepad1.right_stick_y)<0){
+//                if(gamepad1.right_stick_x < 0){
+//                    rightFrontDrive.setPower(forward);
+//                    leftBackDrive.setPower((forward));
+//                }
+//                else{
+//                    rightFrontDrive.setPower(-forward);
+//                    leftBackDrive.setPower(-forward);
+//                }
+//                leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            }
             else if(gamepad1.right_trigger>0){
                 leftFrontDrive.setPower(forward*turningFactor);
                 leftBackDrive.setPower(forward*turningFactor);
@@ -159,17 +170,18 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
             }
 
 
+
 //            Declare 1=being pressed, 0=not being pressed
             if(gamepad1.a){
-                thisTime = 1;
+                thisTime = true;
             }
             else{
-                thisTime = 0;
+                thisTime = false;
             }
 //            check for the button is pressed...
             if(thisTime != lastTime){
 //                check that change is to pushed
-                if(thisTime == 1) {
+                if(thisTime == true) {
                     if (forward == maxSpeed){
                         forward = slowSpeed;
                     } else {
@@ -180,14 +192,12 @@ public class Teleop_Linear_Arcade extends LinearOpMode {
                     } else {
                         backward = -maxSpeed;
                     }
-                    lastTime = 1;
+                    lastTime = true;
                 }
             }
             lastTime = thisTime;
 
             telemetry.addData("Motor Speed: ", forward);
-
-
 
 
 
